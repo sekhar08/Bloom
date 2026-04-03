@@ -1,0 +1,32 @@
+{
+  "recordings": [
+    {
+      "id": "29d45492-bec6-4305-9eb7-ddf3513894d2",
+      "title": "HI tere",
+      "muxUploadId": "nwvh8DmYHwgUUSqpCVg3429Ee6ojtBCrU47Nc02rHxHg",
+      "muxAssetId": null,
+      "playbackId": null,
+      "status": "uploading",
+      "transcriptStatus": "idle",
+      "summaryStatus": "idle",
+      "errorCode": null,
+      "durationSeconds": null,
+      "createdAt": "2026-04-02T14:40:37.938Z",
+      "updatedAt": "2026-04-02T14:40:37.938Z"
+    },
+    {
+      "id": "201bc2f0-1b37-4ab1-a92f-63d695fc1a36",
+      "title": "Spirit demo",
+      "muxUploadId": "00Ct2HSYb6iI00wcd63v00boMDuBlJ9uIEVoKPcEOYibOc",
+      "muxAssetId": null,
+      "playbackId": null,
+      "status": "uploading",
+      "transcriptStatus": "idle",
+      "summaryStatus": "idle",
+      "errorCode": null,
+      "durationSeconds": null,
+      "createdAt": "2026-04-02T14:39:26.925Z",
+      "updatedAt": "2026-04-02T14:39:26.925Z"
+    }
+  ]
+}
