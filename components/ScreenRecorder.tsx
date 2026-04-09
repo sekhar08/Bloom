@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { createUploadUrl, getAssetIdFromUpload } from '@/app/actions';
+import { createUploadUrl } from '@/app/actions';
 import { Loader2, StopCircle, Monitor, Video} from 'lucide-react';
 
 export default function ScreenRecorder() {
@@ -112,15 +112,8 @@ export default function ScreenRecorder() {
                 body: mediaBlob 
             });
 
-            // Step 3: Poll until processing completes
-            while (true) {
-                const result = await getAssetIdFromUpload(uploadConfig.id);
-                if (result.playbackId) {
-                    router.push(`/video/${result.playbackId}`);
-                    break;
-                }
-                await new Promise(r => setTimeout(r, 1000));
-            }
+            // Step 3: Transition into the app-owned detail page immediately.
+            router.push(`/recordings/${uploadConfig.id}`);
         } catch (err) {
             console.error('Upload failed', err);
             setIsUploading(false);

@@ -10,7 +10,7 @@ interface SummaryData {
     tags: string[];
 }
 
-export default function VideoSummary({ playbackId }: { playbackId: string }) {
+export default function VideoSummary({ recordingId }: { recordingId: string }) {
     const [summary, setSummary] = useState<SummaryData | null>(null);
     const [isGenerating, setIsGenerating] = useState(false);
     const [error, setError] = useState(false);
@@ -19,7 +19,7 @@ export default function VideoSummary({ playbackId }: { playbackId: string }) {
         setIsGenerating(true);
         setError(false);
 
-        const result = await generateVideoSummary(playbackId);
+        const result = await generateVideoSummary(recordingId);
 
         if (result) {
             setSummary(result);
