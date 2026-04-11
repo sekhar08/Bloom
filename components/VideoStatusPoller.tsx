@@ -34,9 +34,9 @@ export default function VideoStatusPoller({
   if (isVideoReady) return null;
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center text-slate-400 bg-slate-900">
-      <Loader2 className="w-8 h-8 mb-4 animate-spin text-blue-500" />
-      <p>Processing Video...</p>
+    <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-[rgba(255,252,247,0.8)] text-[var(--foreground-soft)]">
+      <Loader2 className="h-8 w-8 animate-spin text-[var(--accent)]" aria-hidden="true" />
+      <p className="text-sm font-medium">Processing recording…</p>
     </div>
   );
 }

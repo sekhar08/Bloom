@@ -1,28 +1,161 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --font-sans: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --background: #f3efe7;
+  --background-elevated: rgba(255, 252, 247, 0.76);
+  --background-strong: #fffdf8;
+  --foreground: #1d2733;
+  --foreground-soft: #536171;
+  --border: rgba(39, 55, 74, 0.12);
+  --border-strong: rgba(39, 55, 74, 0.18);
+  --accent: #2c6a6b;
+  --accent-strong: #1e5254;
+  --accent-soft: rgba(44, 106, 107, 0.12);
+  --success: #2f7d5c;
+  --warning: #8a5a23;
+  --shadow-soft: 0 24px 60px rgba(24, 36, 52, 0.08);
+  --shadow-crisp: 0 10px 30px rgba(24, 36, 52, 0.06);
+  --font-sans: "Avenir Next", "Segoe UI", sans-serif;
+  --font-display: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
   --font-mono: "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+  color-scheme: light;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  background: var(--background);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  background-image:
+    radial-gradient(circle at top left, rgba(93, 126, 166, 0.12), transparent 30%),
+    radial-gradient(circle at top right, rgba(44, 106, 107, 0.1), transparent 28%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(243, 239, 231, 0.96));
+  background-attachment: fixed;
+  text-rendering: optimizeLegibility;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.35;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.45)),
+    radial-gradient(circle at 1px 1px, rgba(30, 42, 56, 0.04) 1px, transparent 0);
+  background-size: 100% 100%, 22px 22px;
+}
+
+::selection {
+  background: rgba(44, 106, 107, 0.18);
+  color: var(--foreground);
+}
+
+a,
+button {
+  transition-property: color, background-color, border-color, box-shadow, transform, opacity;
+  transition-duration: 180ms;
+  transition-timing-function: ease;
+}
+
+:focus-visible {
+  outline: 2px solid rgba(44, 106, 107, 0.45);
+  outline-offset: 2px;
+}
+
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+}
+
+@layer components {
+  .ui-shell {
+    @apply relative mx-auto w-full max-w-6xl px-6 py-8 md:px-10 md:py-10;
+  }
+
+  .ui-panel {
+    background: var(--background-elevated);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-soft);
+    backdrop-filter: blur(18px);
+  }
+
+  .ui-panel-strong {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 252, 247, 0.82));
+    border: 1px solid var(--border-strong);
+    box-shadow: var(--shadow-crisp);
+    backdrop-filter: blur(12px);
+  }
+
+  .ui-badge {
+    @apply inline-flex items-center rounded-full px-3 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em];
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid var(--border);
+    color: var(--foreground-soft);
+  }
+
+  .ui-button-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold text-white;
+    background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+    box-shadow: 0 14px 30px rgba(30, 82, 84, 0.2);
+  }
+
+  .ui-button-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 18px 34px rgba(30, 82, 84, 0.24);
+  }
+
+  .ui-button-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold;
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid var(--border);
+    color: var(--foreground);
+  }
+
+  .ui-button-secondary:hover {
+    background: rgba(255, 255, 255, 0.92);
+    border-color: var(--border-strong);
+    transform: translateY(-1px);
+  }
+
+  .ui-button-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold;
+    color: var(--foreground-soft);
+  }
+
+  .ui-button-ghost:hover {
+    color: var(--foreground);
+    background: rgba(255, 255, 255, 0.6);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }

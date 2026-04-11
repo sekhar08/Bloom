@@ -1,11 +1,29 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, Download } from 'lucide-react';
+import { ArrowLeft, Download, Loader2 } from 'lucide-react';
 import { getAssetStatus } from '@/app/actions';
 import MuxPlayerWrapper from '@/components/MuxPlayerWrapper';
 import ShareButton from '@/components/ShareButton';
 import VideoStatusPoller from '@/components/VideoStatusPoller';
 import VideoSummary from '@/components/VideoSummary';
+import { formatDateTime } from '@/lib/format';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const details = await getAssetStatus(id);
+
+  return {
+    title: details ? details.recording.title : 'Recording',
+    description: details
+      ? `Review ${details.recording.title} with playback, transcript, and AI summary.`
+      : 'Review a Bloom recording.',
+  };
+}
 
 export default async function RecordingPage({
   params,
@@ -27,20 +45,21 @@ export default async function RecordingPage({
     : null;
 
   return (
-    <main className="min-h-screen bg-slate-950 p-6 md:p-12 text-slate-200">
-      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-3 mb-2">
+    <main id="main-content" className="min-h-screen">
+      <div className="ui-shell grid grid-cols-1 gap-8 xl:grid-cols-[1.45fr_0.8fr]">
+        <div className="xl:col-span-2">
           <Link
             href="/dashboard"
-            className="inline-flex items-center gap-2 text-slate-400 hover:text-white transition text-sm font-medium py-2 px-3 rounded-lg hover:bg-slate-900"
+            className="ui-button-ghost -ml-4"
           >
-            <ArrowLeft className="w-4 h-4" />
+            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
             Back to Dashboard
           </Link>
         </div>
 
-        <div className="lg:col-span-2 space-y-6">
-          <div className="bg-black rounded-2xl overflow-hidden shadow-2xl border border-slate-800 aspect-video relative">
+        <div className="space-y-6">
+          <section className="ui-panel-strong overflow-hidden rounded-[2rem] p-4 md:p-5">
+            <div className="aspect-video overflow-hidden rounded-[1.5rem] border border-[var(--border)] bg-[rgba(29,39,51,0.06)] relative">
             {isVideoReady && recording.playbackId ? (
               <>
                 <MuxPlayerWrapper playbackId={recording.playbackId} title={recording.title} />
@@ -49,61 +68,65 @@ export default async function RecordingPage({
             ) : (
               <VideoStatusPoller recordingId={recording.id} isVideoReady={false} />
             )}
-          </div>
-
-          <div className="flex justify-between items-center bg-slate-900 p-6 rounded-xl border border-slate-800">
-            <div>
-              <h1 className="text-xl font-bold text-white">{recording.title}</h1>
-              <p className="mt-1 text-sm text-slate-500">
-                {new Date(recording.createdAt).toLocaleString()} · {recording.status}
-              </p>
             </div>
-            <div className="flex gap-3">
+          </section>
+        </div>
+
+        <aside className="space-y-6">
+          <section className="ui-panel rounded-[2rem] p-6">
+            <span className="ui-badge">Recording</span>
+            <h1 className="mt-4 text-4xl font-semibold text-[var(--foreground)]">{recording.title}</h1>
+            <p className="mt-3 text-sm leading-6 text-[var(--foreground-soft)]">
+              {formatDateTime(recording.createdAt)} · {recording.status}
+            </p>
+
+            <div className="mt-6 flex flex-col gap-3">
               <ShareButton />
               {isVideoReady && downloadUrl ? (
                 <a
                   href={downloadUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg font-medium transition"
+                  className="ui-button-secondary"
                 >
-                  <Download className="w-4 h-4" /> Download
+                  <Download className="h-4 w-4" aria-hidden="true" />
+                  Download MP4
                 </a>
               ) : null}
             </div>
-          </div>
+          </section>
 
-          {isVideoReady ? (
-            <div className="mt-6">
-              <VideoSummary recordingId={recording.id} />
-            </div>
-          ) : null}
-        </div>
+          <section className="ui-panel rounded-[2rem] p-6">
+            <h2 className="text-2xl font-semibold text-[var(--foreground)]">AI Transcript</h2>
 
-        <div className="bg-slate-900 p-6 rounded-2xl border border-slate-800 h-[600px] flex flex-col">
-          <h3 className="font-semibold text-white mb-4">✨ AI Transcript</h3>
-
-          <div className="flex-1 overflow-y-auto space-y-4 pr-2">
+            <div className="mt-5 h-[520px] overflow-y-auto pr-2">
             {isTranscriptReady ? (
               transcript.length > 0 ? (
-                transcript.map((line, index) => (
-                  <div key={`${line.time}-${index}`} className="group p-2 rounded hover:bg-slate-800 transition">
-                    <span className="text-xs text-blue-500 font-mono block mb-1">{line.time}</span>
-                    <p className="text-sm text-slate-300">{line.text}</p>
+                <div className="space-y-3">
+                  {transcript.map((line, index) => (
+                  <div key={`${line.time}-${index}`} className="rounded-[1.2rem] border border-transparent px-3 py-3 hover:border-[var(--border)] hover:bg-white/60">
+                    <span className="block font-mono text-xs text-[var(--accent)]">{line.time}</span>
+                    <p className="mt-1 text-sm leading-6 text-[var(--foreground-soft)]">{line.text}</p>
                   </div>
-                ))
+                ))}
+                </div>
               ) : (
-                <p className="text-slate-500 italic text-sm">No speech detected.</p>
+                <p className="text-sm italic text-[var(--foreground-soft)]">No speech detected.</p>
               )
             ) : (
-              <div className="flex flex-col items-center justify-center h-40 text-slate-500 gap-2">
-                <span className="animate-spin">⏳</span>
+              <div className="flex h-40 flex-col items-center justify-center gap-3 text-[var(--foreground-soft)]">
+                <Loader2 className="h-5 w-5 animate-spin text-[var(--accent)]" aria-hidden="true" />
                 <p className="text-sm">
-                  {recording.status === 'failed' ? 'Recording failed to process.' : 'Generating transcript...'}
+                  {recording.status === 'failed' ? 'Recording failed to process.' : 'Generating transcript…'}
                 </p>
               </div>
             )}
           </div>
+          </section>
+        </aside>
+
+        <div className="xl:col-span-2">
+          {isVideoReady ? <VideoSummary recordingId={recording.id} /> : null}
         </div>
       </div>
     </main>

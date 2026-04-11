@@ -2,7 +2,7 @@
 
 Bloom is a Next.js 16 screen-recording app with:
 
-- Auth.js OAuth sign-in with Google and GitHub
+- Auth.js OAuth sign-in with Google
 - Neon + Drizzle persistence for users, sessions, and recordings
 - Mux uploads for authenticated recordings only
 - Per-user dashboards and protected recording detail pages

@@ -12,7 +12,7 @@ export default function VideoThumbnail({ playbackId }: { playbackId: string }) {
 
     if (hasError) {
         return (
-            <div className="w-full h-full flex items-center justify-center bg-slate-800 text-slate-500 text-sm">
+            <div className="flex h-full w-full items-center justify-center bg-[rgba(29,39,51,0.08)] text-sm text-[var(--foreground-soft)]">
                 No preview
             </div>
         );
@@ -20,7 +20,7 @@ export default function VideoThumbnail({ playbackId }: { playbackId: string }) {
 
     return (
         <div 
-        className="w-full h-full relative"
+        className="relative h-full w-full overflow-hidden"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         >
@@ -32,5 +32,6 @@ export default function VideoThumbnail({ playbackId }: { playbackId: string }) {
             onError={() => setHasError(true)}
             className={`object-cover transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-90'}`}
             />
-            </div>
-    );}
+        </div>
+    );
+}

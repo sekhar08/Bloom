@@ -13,12 +13,14 @@ export default function ShareButton() {
   };
 
   return (
-    <button 
+    <button
+      type="button"
       onClick={handleShare}
-      className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition"
+      className="ui-button-primary min-w-36"
+      aria-live="polite"
     >
-      {copied ? <Check className="w-4 h-4" /> : <Share2 className="w-4 h-4" />}
-      {copied ? 'Copied Link!' : 'Share Video'}
+      {copied ? <Check className="h-4 w-4" aria-hidden="true" /> : <Share2 className="h-4 w-4" aria-hidden="true" />}
+      {copied ? 'Link Copied' : 'Share Recording'}
     </button>
   );
 }
