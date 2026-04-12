@@ -16,6 +16,9 @@ const TEST_USER = {
 };
 
 export const { handlers, auth, signIn, signOut } = NextAuth(() => ({
+  // Trust the Host header so the custom domain (not the Vercel deployment URL) is used
+  // for OAuth callbacks and redirects.
+  trustHost: true,
   adapter: DrizzleAdapter(getDb(), {
     usersTable: schema.users,
     accountsTable: schema.accounts,
