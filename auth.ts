@@ -22,6 +22,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth(() => ({
     sessionsTable: schema.sessions,
     verificationTokensTable: schema.verificationTokens,
   }),
+  // Credentials provider requires JWT sessions — cannot use database sessions.
+  // OAuth providers still use the adapter for user creation/lookup.
+  session: { strategy: 'jwt' },
   providers: [
     Google,
     Credentials({
@@ -94,10 +97,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth(() => ({
       }
       return token;
     },
-    // user is set for database (OAuth) sessions; token is set for JWT (Credentials) sessions
-    session({ session, user, token }) {
+    // With JWT strategy, token.sub holds the database user ID for both OAuth and Credentials
+    session({ session, token }) {
       if (session.user) {
-        session.user.id = user?.id ?? (token?.id as string) ?? (token?.sub as string) ?? '';
+        session.user.id = (token.id as string) || token.sub || '';
       }
       return session;
     },
