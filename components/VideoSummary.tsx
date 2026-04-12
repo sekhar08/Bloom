@@ -40,7 +40,7 @@ export default function VideoSummary({ recordingId }: { recordingId: string }) {
             {summary.tags.map((tag) => (
                 <span 
                 key={tag} 
-                className="rounded-full border border-[var(--border)] bg-white/70 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--foreground-soft)]"
+                className="rounded-full border border-[var(--border)] bg-[rgba(255,255,255,0.04)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--foreground-soft)]"
                 >
                 #{tag}
                 </span>

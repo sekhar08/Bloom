@@ -120,7 +120,7 @@ export default function ScreenRecorder() {
   };
 
   return (
-    <section className="w-full rounded-[2rem] border border-[rgba(255,255,255,0.55)] bg-[linear-gradient(180deg,rgba(255,255,255,0.88),rgba(255,252,247,0.78))] p-5 shadow-[0_24px_60px_rgba(24,36,52,0.08)] backdrop-blur md:p-8">
+    <section className="ui-panel w-full rounded-[2rem] p-5 md:p-8">
       <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div className="space-y-3">
@@ -135,17 +135,17 @@ export default function ScreenRecorder() {
           </div>
 
           <div className="grid grid-cols-2 gap-3 text-xs font-medium text-[var(--foreground-soft)] sm:flex">
-            <span className="rounded-full border border-[var(--border)] bg-white/70 px-3 py-2">
+            <span className="rounded-full border border-[var(--border)] bg-[rgba(255,255,255,0.04)] px-3 py-2">
               Screen
             </span>
-            <span className="rounded-full border border-[var(--border)] bg-white/70 px-3 py-2">
+            <span className="rounded-full border border-[var(--border)] bg-[rgba(255,255,255,0.04)] px-3 py-2">
               Microphone
             </span>
           </div>
         </div>
 
         <div className="grid gap-5 lg:grid-cols-[1.7fr_0.82fr]">
-          <div className="relative aspect-video overflow-hidden rounded-[1.75rem] border border-[var(--border)] bg-[radial-gradient(circle_at_top,_rgba(44,106,107,0.15),_transparent_40%),linear-gradient(180deg,_rgba(255,255,255,0.9),_rgba(233,228,218,0.92))] shadow-[inset_0_1px_0_rgba(255,255,255,0.65)]">
+          <div className="relative aspect-video overflow-hidden rounded-[1.75rem] border border-[var(--border)] bg-[var(--background-strong)] shadow-[inset_0_1px_0_rgba(232,240,235,0.06)]">
             <video
               ref={liveVideoRef}
               autoPlay
@@ -162,15 +162,15 @@ export default function ScreenRecorder() {
             ) : null}
 
             {!isRecording && !mediaBlob ? (
-              <div className="flex h-full flex-col items-center justify-center text-[var(--foreground-soft)]">
+              <div className="flex h-full flex-col items-center justify-center text-[var(--foreground-muted)]">
                 <Monitor className="mb-3 h-12 w-12 opacity-60" aria-hidden="true" />
-                <span className="text-base font-semibold">Preview</span>
+                <span className="text-base font-semibold text-[var(--foreground-soft)]">Preview</span>
               </div>
             ) : null}
 
             {isRecording ? (
-              <div className="absolute right-5 top-5 flex items-center gap-2 rounded-full bg-[rgba(255,255,255,0.82)] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--foreground)]">
-                <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.45)]" />
+              <div className="absolute right-5 top-5 flex items-center gap-2 rounded-full border border-[var(--border)] bg-[rgba(14,26,18,0.85)] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--foreground)]">
+                <span className="h-2.5 w-2.5 animate-recording-pulse rounded-full bg-red-400" />
                 Recording
               </div>
             ) : null}
@@ -197,7 +197,7 @@ export default function ScreenRecorder() {
 
             <div
               aria-live="polite"
-              className="mt-6 rounded-[1.25rem] border border-[var(--border)] bg-white/70 p-4 text-sm text-[var(--foreground-soft)]"
+              className="mt-6 rounded-[1.25rem] border border-[var(--border)] bg-[rgba(255,255,255,0.04)] p-4 text-sm text-[var(--foreground-soft)]"
             >
               {isUploading
                 ? 'Uploading…'
@@ -222,7 +222,7 @@ export default function ScreenRecorder() {
             <button
               type="button"
               onClick={stopRecording}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[linear-gradient(135deg,#9f3a32,#7f1d1d)] py-3 text-sm font-semibold text-white shadow-[0_14px_30px_rgba(127,29,29,0.18)] hover:-translate-y-px"
+              className="ui-button-danger w-full py-3"
             >
               <StopCircle className="h-5 w-5" aria-hidden="true" />
               Stop Recording

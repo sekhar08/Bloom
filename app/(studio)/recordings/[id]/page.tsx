@@ -45,21 +45,17 @@ export default async function RecordingPage({
     : null;
 
   return (
-    <main id="main-content" className="min-h-screen">
-      <div className="ui-shell grid grid-cols-1 gap-8 xl:grid-cols-[1.45fr_0.8fr]">
-        <div className="xl:col-span-2">
-          <Link
-            href="/dashboard"
-            className="ui-button-ghost -ml-4"
-          >
-            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-            Back to Dashboard
-          </Link>
-        </div>
+    <div className="ui-shell grid grid-cols-1 gap-8 xl:grid-cols-[1.45fr_0.8fr]">
+      <div className="xl:col-span-2">
+        <Link href="/dashboard" className="ui-button-ghost -ml-4">
+          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+          Back to Library
+        </Link>
+      </div>
 
-        <div className="space-y-6">
-          <section className="ui-panel-strong overflow-hidden rounded-[2rem] p-4 md:p-5">
-            <div className="aspect-video overflow-hidden rounded-[1.5rem] border border-[var(--border)] bg-[rgba(29,39,51,0.06)] relative">
+      <div className="animate-fade-up space-y-6">
+        <section className="ui-panel-strong overflow-hidden rounded-[2rem] p-4 md:p-5">
+          <div className="aspect-video overflow-hidden rounded-[1.5rem] border border-[var(--border)] bg-[rgba(0,0,0,0.4)] relative">
             {isVideoReady && recording.playbackId ? (
               <>
                 <MuxPlayerWrapper playbackId={recording.playbackId} title={recording.title} />
@@ -68,47 +64,50 @@ export default async function RecordingPage({
             ) : (
               <VideoStatusPoller recordingId={recording.id} isVideoReady={false} />
             )}
-            </div>
-          </section>
-        </div>
+          </div>
+        </section>
+      </div>
 
-        <aside className="space-y-6">
-          <section className="ui-panel rounded-[2rem] p-6">
-            <span className="ui-badge">Recording</span>
-            <h1 className="mt-4 text-4xl font-semibold text-[var(--foreground)]">{recording.title}</h1>
-            <p className="mt-3 text-sm leading-6 text-[var(--foreground-soft)]">
-              {formatDateTime(recording.createdAt)} · {recording.status}
-            </p>
+      <aside className="animate-fade-up space-y-6" style={{ animationDelay: '80ms' }}>
+        <section className="ui-panel rounded-[2rem] p-6">
+          <span className="ui-badge">Recording</span>
+          <h1 className="mt-4 text-4xl font-semibold text-[var(--foreground)]">{recording.title}</h1>
+          <p className="mt-3 text-sm leading-6 text-[var(--foreground-soft)]">
+            {formatDateTime(recording.createdAt)} · {recording.status}
+          </p>
 
-            <div className="mt-6 flex flex-col gap-3">
-              <ShareButton />
-              {isVideoReady && downloadUrl ? (
-                <a
-                  href={downloadUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="ui-button-secondary"
-                >
-                  <Download className="h-4 w-4" aria-hidden="true" />
-                  Download MP4
-                </a>
-              ) : null}
-            </div>
-          </section>
+          <div className="mt-6 flex flex-col gap-3">
+            <ShareButton />
+            {isVideoReady && downloadUrl ? (
+              <a
+                href={downloadUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ui-button-secondary"
+              >
+                <Download className="h-4 w-4" aria-hidden="true" />
+                Download MP4
+              </a>
+            ) : null}
+          </div>
+        </section>
 
-          <section className="ui-panel rounded-[2rem] p-6">
-            <h2 className="text-2xl font-semibold text-[var(--foreground)]">AI Transcript</h2>
+        <section className="ui-panel rounded-[2rem] p-6">
+          <h2 className="text-2xl font-semibold text-[var(--foreground)]">AI Transcript</h2>
 
-            <div className="mt-5 h-[520px] overflow-y-auto pr-2">
+          <div className="mt-5 h-[520px] overflow-y-auto pr-2">
             {isTranscriptReady ? (
               transcript.length > 0 ? (
                 <div className="space-y-3">
                   {transcript.map((line, index) => (
-                  <div key={`${line.time}-${index}`} className="rounded-[1.2rem] border border-transparent px-3 py-3 hover:border-[var(--border)] hover:bg-white/60">
-                    <span className="block font-mono text-xs text-[var(--accent)]">{line.time}</span>
-                    <p className="mt-1 text-sm leading-6 text-[var(--foreground-soft)]">{line.text}</p>
-                  </div>
-                ))}
+                    <div
+                      key={`${line.time}-${index}`}
+                      className="rounded-[1.2rem] border border-transparent px-3 py-3 hover:border-[var(--border)] hover:bg-[rgba(255,255,255,0.04)]"
+                    >
+                      <span className="block font-mono text-xs text-[var(--accent)]">{line.time}</span>
+                      <p className="mt-1 text-sm leading-6 text-[var(--foreground-soft)]">{line.text}</p>
+                    </div>
+                  ))}
                 </div>
               ) : (
                 <p className="text-sm italic text-[var(--foreground-soft)]">No speech detected.</p>
@@ -122,13 +121,12 @@ export default async function RecordingPage({
               </div>
             )}
           </div>
-          </section>
-        </aside>
+        </section>
+      </aside>
 
-        <div className="xl:col-span-2">
-          {isVideoReady ? <VideoSummary recordingId={recording.id} /> : null}
-        </div>
+      <div className="xl:col-span-2 animate-fade-up" style={{ animationDelay: '160ms' }}>
+        {isVideoReady ? <VideoSummary recordingId={recording.id} /> : null}
       </div>
-    </main>
+    </div>
   );
 }
