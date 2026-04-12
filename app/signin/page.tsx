@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default async function SignInPage({
   searchParams,
 }: {
-  searchParams: Promise<{ callbackUrl?: string }>;
+  searchParams: Promise<{ callbackUrl?: string; error?: string }>;
 }) {
   const isDatabaseConfigured = hasDatabaseUrl();
   const session = isDatabaseConfigured ? await auth() : null;
@@ -21,28 +21,22 @@ export default async function SignInPage({
     redirect('/');
   }
 
-  const { callbackUrl = '/' } = await searchParams;
+  const { callbackUrl = '/', error } = await searchParams;
 
   return (
     <main id="main-content" className="relative min-h-screen overflow-hidden flex items-center justify-center">
 
-      {/* ── Atmospheric background layers ── */}
-
-      {/* Central amber spotlight */}
+      {/* ── Atmospheric background ── */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 h-[520px] w-[800px] rounded-full blur-[120px]"
         style={{ background: 'radial-gradient(ellipse, rgba(212,168,67,0.09) 0%, transparent 70%)' }}
       />
-
-      {/* Bottom sage glow */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 h-64 w-[600px] rounded-full blur-[100px]"
         style={{ background: 'radial-gradient(ellipse, rgba(127,176,144,0.07) 0%, transparent 70%)' }}
       />
-
-      {/* Concentric ambient rings */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute rounded-full border border-[rgba(212,168,67,0.07)]"
@@ -58,36 +52,22 @@ export default async function SignInPage({
         className="pointer-events-none absolute rounded-full border border-[rgba(212,168,67,0.025)]"
         style={{ width: 1100, height: 1100, top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}
       />
-
-      {/* Corner accent glows */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -top-32 -left-32 h-96 w-96 rounded-full blur-[100px]"
-        style={{ background: 'rgba(127,176,144,0.04)' }}
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -bottom-32 -right-32 h-96 w-96 rounded-full blur-[100px]"
-        style={{ background: 'rgba(212,168,67,0.04)' }}
-      />
+      <div aria-hidden="true" className="pointer-events-none absolute -top-32 -left-32 h-96 w-96 rounded-full blur-[100px]" style={{ background: 'rgba(127,176,144,0.04)' }} />
+      <div aria-hidden="true" className="pointer-events-none absolute -bottom-32 -right-32 h-96 w-96 rounded-full blur-[100px]" style={{ background: 'rgba(212,168,67,0.04)' }} />
 
       {/* ── Content ── */}
-      <div className="relative z-10 w-full max-w-[400px] px-6">
+      <div className="relative z-10 w-full max-w-[420px] px-6 py-12">
 
         {/* Bloom wordmark */}
-        <div className="animate-fade-up mb-12 text-center">
+        <div className="animate-fade-up mb-10 text-center">
           <div className="relative inline-flex flex-col items-center gap-4">
-            {/* Glow halo behind the dot */}
             <div className="relative">
               <span
                 aria-hidden="true"
                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-8 w-8 rounded-full blur-lg"
                 style={{ background: 'rgba(212,168,67,0.45)' }}
               />
-              <span
-                aria-hidden="true"
-                className="relative h-3 w-3 rounded-full bg-[var(--accent)] animate-glow-pulse block"
-              />
+              <span aria-hidden="true" className="relative h-3 w-3 rounded-full bg-[var(--accent)] animate-glow-pulse block" />
             </div>
             <span className="font-display text-[3.5rem] leading-none tracking-[-0.04em] text-[var(--foreground)]">
               Bloom
@@ -100,7 +80,7 @@ export default async function SignInPage({
 
         {/* Sign-in card */}
         <div className="animate-fade-up" style={{ animationDelay: '120ms' }}>
-          <div className="relative overflow-hidden rounded-[2rem] border border-[var(--border)] bg-[var(--background-surface)] p-8 shadow-[var(--shadow-soft)]">
+          <div className="relative overflow-hidden rounded-[2rem] border border-[var(--border)] bg-[var(--background-surface)] shadow-[var(--shadow-soft)]">
 
             {/* Amber hairline top accent */}
             <div
@@ -108,7 +88,6 @@ export default async function SignInPage({
               className="pointer-events-none absolute inset-x-0 top-0 h-px"
               style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(212,168,67,0.45) 50%, transparent 100%)' }}
             />
-
             {/* Inner radial glow */}
             <div
               aria-hidden="true"
@@ -116,13 +95,32 @@ export default async function SignInPage({
               style={{ background: 'radial-gradient(ellipse at top, rgba(212,168,67,0.05) 0%, transparent 65%)' }}
             />
 
-            <div className="relative">
+            <div className="relative p-8">
               <h2 className="text-2xl font-semibold text-[var(--foreground)]">Welcome back</h2>
-              <p className="mt-2 text-sm leading-6 text-[var(--foreground-soft)]">
+              <p className="mt-1.5 text-sm leading-6 text-[var(--foreground-soft)]">
                 Sign in to continue to your studio.
               </p>
 
-              <div className="mt-8">
+              {/* Error message */}
+              {error ? (
+                <div className="mt-4 rounded-[1rem] border border-[rgba(192,82,74,0.25)] bg-[rgba(192,82,74,0.08)] px-4 py-3 text-sm text-[var(--danger)]">
+                  Invalid email or password. Please try again.
+                </div>
+              ) : null}
+
+              {/* ── Test credentials hint ── */}
+              <div className="mt-6 rounded-[1.1rem] border border-[var(--border-accent)] bg-[var(--accent-soft)] px-4 py-3.5">
+                <p className="mb-2 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[var(--accent)]">
+                  Test Credentials
+                </p>
+                <div className="space-y-1 font-mono text-xs text-[var(--foreground-soft)]">
+                  <p><span className="text-[var(--foreground-muted)]">email</span>    testuser@gmail.com</p>
+                  <p><span className="text-[var(--foreground-muted)]">password</span> testuser123</p>
+                </div>
+              </div>
+
+              {/* ── Google sign-in ── */}
+              <div className="mt-5">
                 <form
                   action={async () => {
                     'use server';
@@ -133,15 +131,12 @@ export default async function SignInPage({
                     type="submit"
                     className="group relative flex w-full items-center gap-4 overflow-hidden rounded-[1.25rem] border border-[var(--border-strong)] bg-[rgba(255,255,255,0.05)] px-5 py-4 text-sm font-semibold text-[var(--foreground)] hover:bg-[rgba(255,255,255,0.09)] hover:border-[rgba(232,240,235,0.22)] hover:-translate-y-px"
                   >
-                    {/* Hover inner glow */}
                     <span
                       aria-hidden="true"
                       className="pointer-events-none absolute inset-0 rounded-[1.25rem] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                       style={{ background: 'radial-gradient(ellipse at center, rgba(212,168,67,0.06) 0%, transparent 70%)' }}
                     />
-
                     <span className="relative flex w-full items-center gap-4">
-                      {/* Google logo */}
                       <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0" aria-hidden="true">
                         <path fill="#EA4335" d="M12 10.2v3.96h5.51c-.24 1.27-.96 2.35-2.03 3.07l3.28 2.55c1.91-1.76 3.02-4.35 3.02-7.42 0-.72-.06-1.41-.19-2.08H12Z" />
                         <path fill="#34A853" d="M12 22c2.73 0 5.02-.9 6.69-2.44l-3.28-2.55c-.91.61-2.08.97-3.41.97-2.62 0-4.84-1.77-5.63-4.15H2.98v2.61A10.096 10.096 0 0 0 12 22Z" />
@@ -149,17 +144,62 @@ export default async function SignInPage({
                         <path fill="#FBBC05" d="M12 6.02c1.49 0 2.83.51 3.89 1.5l2.92-2.92C17.01 2.95 14.72 2 12 2A10.096 10.096 0 0 0 2.98 7.56l3.39 2.61C7.16 7.79 9.38 6.02 12 6.02Z" />
                       </svg>
                       <span className="flex-1 text-left">Continue with Google</span>
-                      <ArrowRight
-                        className="h-4 w-4 shrink-0 text-[var(--foreground-muted)] transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-[var(--foreground-soft)]"
-                        aria-hidden="true"
-                      />
+                      <ArrowRight className="h-4 w-4 shrink-0 text-[var(--foreground-muted)] transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-[var(--foreground-soft)]" aria-hidden="true" />
                     </span>
                   </button>
                 </form>
               </div>
 
+              {/* ── Divider ── */}
+              <div className="my-5 flex items-center gap-3">
+                <div className="h-px flex-1 bg-[var(--border)]" />
+                <span className="text-xs text-[var(--foreground-muted)]">or</span>
+                <div className="h-px flex-1 bg-[var(--border)]" />
+              </div>
+
+              {/* ── Credentials sign-in ── */}
+              <form
+                action={async (formData: FormData) => {
+                  'use server';
+                  const email = formData.get('email') as string;
+                  const password = formData.get('password') as string;
+                  await signIn('credentials', { email, password, redirectTo: callbackUrl });
+                }}
+                className="space-y-3"
+              >
+                <div>
+                  <label htmlFor="email" className="sr-only">Email</label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    defaultValue="testuser@gmail.com"
+                    placeholder="Email"
+                    required
+                    className="w-full rounded-[1.1rem] border border-[var(--border-strong)] bg-[rgba(255,255,255,0.04)] px-4 py-3.5 text-sm text-[var(--foreground)] placeholder:text-[var(--foreground-muted)] focus:border-[var(--border-accent)] focus:outline-none focus:ring-1 focus:ring-[var(--border-accent)]"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="password" className="sr-only">Password</label>
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    autoComplete="current-password"
+                    defaultValue="testuser123"
+                    placeholder="Password"
+                    required
+                    className="w-full rounded-[1.1rem] border border-[var(--border-strong)] bg-[rgba(255,255,255,0.04)] px-4 py-3.5 text-sm text-[var(--foreground)] placeholder:text-[var(--foreground-muted)] focus:border-[var(--border-accent)] focus:outline-none focus:ring-1 focus:ring-[var(--border-accent)]"
+                  />
+                </div>
+                <button type="submit" className="ui-button-primary w-full py-3.5">
+                  Sign In
+                </button>
+              </form>
+
               {!isDatabaseConfigured ? (
-                <p className="mt-6 rounded-[1.25rem] border border-[rgba(200,136,58,0.24)] bg-[rgba(200,136,58,0.08)] px-4 py-3 text-sm text-[var(--warning)]">
+                <p className="mt-5 rounded-[1.1rem] border border-[rgba(200,136,58,0.24)] bg-[rgba(200,136,58,0.08)] px-4 py-3 text-sm text-[var(--warning)]">
                   `DATABASE_URL` is missing. Configure Neon before attempting to sign in.
                 </p>
               ) : null}
@@ -167,12 +207,11 @@ export default async function SignInPage({
           </div>
         </div>
 
-        {/* Footer hint */}
         <p
-          className="animate-fade-up mt-8 text-center text-xs text-[var(--foreground-muted)]"
+          className="animate-fade-up mt-7 text-center text-xs text-[var(--foreground-muted)]"
           style={{ animationDelay: '240ms' }}
         >
-          No account needed — just a Google sign-in.
+          No account needed — just a Google sign-in or test credentials.
         </p>
       </div>
     </main>
